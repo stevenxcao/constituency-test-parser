@@ -7,6 +7,8 @@ EMNLP 2020
 This code was tested with `python 3.6`, `pytorch 1.1`, and `pytorch-transformers 1.2`.
 ### Data
 The Penn Treebank and [CoLA](https://nyu-mll.github.io/CoLA/) data are contained in the `data` folder. The folder also contains a few sentences from Gigaword to show the formatting; for the full data please [download it from the LDC](https://catalog.ldc.upenn.edu/LDC2011T07).
+
+The PTB data is split into test (`23.auto.clean`), dev (`22.auto.clean`), and train (`02-21.10way.clean`). The `ptb-test.txt` file is the same as `23.auto.clean` except without punctuation or unary chains, and the sentences are in a different order. We use `ptb-test.txt` during evaluation to stay consistent with past work.
 ### Running the code
 To run the main experiment in the paper, see `run_full.sh`. To reduce the memory usage, reduce both `--subbatch-size` and `--num-grad` while ensuring that the ratio between them stays the same (`num-grad` divided by `subbatch-size` should be 16).
 ### Note regarding evaluation
