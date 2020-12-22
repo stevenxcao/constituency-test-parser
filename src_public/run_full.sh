@@ -2,7 +2,7 @@ conda activate pytorch1.1
 
 stdbuf -oL -eL python -u train_grammar_model.py train \
   --model-path roberta_base_grammar_gigaword_2M.pt \
-  --train-giga-path /home/kitaev/steven/data/gigaword \
+  --train-giga-path ../data/gigaword \
   --dev-cola-path ../data/in_domain_dev.tsv \
   --epochs 1 --bert-model roberta-base --reinit 0 --num-sent 2000000 \
   > out_train_grammar_model.txt
