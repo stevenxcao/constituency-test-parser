@@ -44,8 +44,8 @@ def load_gigaword(directory, min_len = 2, max_len = 60, num_sent = 5e6):
                     if line not in ('<doc>', '<doc/>'):
                         words = line.split()
                         if len(words) in range(min_len, max_len + 1):
-                            if words[-1] == '.':
-                                words = words[:-1]
+                            # if words[-1] == '.':
+                            #     words = words[:-1]
                             sents.append(words)
                     if len(sents) >= num_sent:
                         return sents

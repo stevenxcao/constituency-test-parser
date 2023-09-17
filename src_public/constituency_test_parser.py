@@ -29,7 +29,7 @@ class ConstituencyTestParser(nn.Module):
             return tests, labels
     
     def calc_posterior(self, sent, pgram):
-        return np.sum(pgram) / len(pgram) # pgram has tensors in it, so we cannot use np.mean
+        return sum(pgram) / len(pgram) # pgram has tensors in it, so we cannot use np.mean
 
     def is_constituent(self, sent_s, i_s, j_s):
         """
@@ -61,15 +61,19 @@ class ConstituencyTestParser(nn.Module):
                 all_pgram = all_pgram + list(F.softmax(self.grammar_model(all_tests_shuffled[:self.num_grad]), dim = -1)[:,1])
             if self.num_grad < len(all_tests):
                 with torch.no_grad(): # compute the rest without grad
-                    all_pgram = all_pgram + list(F.softmax(self.grammar_model(all_tests_shuffled[self.num_grad:]), dim = -1)[:,1].cpu().numpy())
-        all_pgram = np.array(all_pgram)
-        all_pgram[shuffle_idx] = all_pgram.copy() # unshuffle
+                    all_pgram = all_pgram + list(F.softmax(self.grammar_model(all_tests_shuffled[self.num_grad:]), dim = -1)[:,1])
+        def unshuffle_list(shuffled_list, shuffled_indices):
+            unshuffled_list = [None] * len(shuffled_list)
+            for i, idx in enumerate(shuffled_indices):
+                unshuffled_list[idx] = shuffled_list[i]
+            return unshuffled_list
+        all_pgram = unshuffle_list(all_pgram, shuffle_idx)
 
         prob_s, label_s = [], [] # prob and label of each span (indexing is aligned with sent_s, i_s, j_s, idx_s)
         for sent, i, j, idx in zip(sent_s, i_s, j_s, idx_s):
             k, l = idx
             if l - k == 0: # no tests for this span
-                prob_s.append(1)
+                prob_s.append(torch.as_tensor(1))
                 label_s.append('X')
             else:
                 pgram = all_pgram[k:l]
