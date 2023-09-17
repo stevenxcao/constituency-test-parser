@@ -5,7 +5,7 @@ if use_cuda:
     print("Using CUDA!")
     torch_t = torch.cuda
     def from_numpy(ndarray):
-        return torch.from_numpy(ndarray).pin_memory().cuda(async=True)
+        return torch.from_numpy(ndarray).pin_memory().cuda(non_blocking=True)
 else:
     print("Not using CUDA!")
     torch_t = torch

@@ -33,6 +33,7 @@ class BigramModel:
     
     def retrain(self, train_text):
         self.vocab = build_vocab(train_text)
+        # print(self.vocab.w2i)
         
         self.counts = np.zeros((len(self.vocab), len(self.vocab)))
         for exmp in train_text:

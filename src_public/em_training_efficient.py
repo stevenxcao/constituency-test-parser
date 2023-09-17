@@ -54,9 +54,9 @@ def compute_f1_evalb(gold_str, tree_str):
 
 def list_to_tensor_grad(lst):
     # lst has 0-dim tensors
-    tensor = lst[0][None]
+    tensor = lst[0][None].cuda(non_blocking=True)
     for i in range(1,len(lst)):
-        tensor = torch.cat((tensor, lst[i][None]))
+        tensor = torch.cat((tensor, lst[i][None].cuda(non_blocking=True)))
     return tensor
 
 def compute_estep_loss(trees, probs):
@@ -74,8 +74,9 @@ def compute_estep_loss(trees, probs):
                             labels_list.append(0)
                         probs_list.append(prob[i][j])
     if len(probs_list) > 0:
-        probs_list = list_to_tensor_grad(probs_list)
-        return F.binary_cross_entropy(probs_list, from_numpy(np.array(labels_list)).float())
+        probs_list = list_to_tensor_grad(probs_list).cuda(non_blocking=True)
+        labels_list = from_numpy(np.array(labels_list)).float()
+        return F.binary_cross_entropy(probs_list, labels_list)
     else:
         return None
 
@@ -155,8 +156,8 @@ def train(train_ptb_path, model_path, resume_path, save_path,
             f1_all = compute_f1_evalb(gold_all, pred_all)
             print()
             print('---------------------------------------------------')
-            print("Epoch-f1 {:.4f}".format(f1_all))
-            print("Saving model to {}...".format(model_path))
+            print("Epoch-f1", (f1_all))
+            print("Saving model to", (model_path))
             torch.save({
                 'bert_model': 'roberta_base',
                 'state_dict': model.state_dict()
@@ -180,7 +181,7 @@ def train(train_ptb_path, model_path, resume_path, save_path,
         pred_all = [str(t) for t in trees]
         gold_all = [exmp['string'] for exmp in train_ptb]
         f1_all = compute_f1_evalb(gold_all, pred_all)
-        print("F1: {}".format(f1_all))
+        print("F1:",format(f1_all))
             
         print("Writing trees to file...")
         with open(save_path, "w") as outfile:
