@@ -5,6 +5,11 @@ Steven Cao, Nikita Kitaev, Dan Klein
 EMNLP 2020  
 ### Dependencies
 This code was tested with `python 3.6`, `pytorch 1.1`, and `pytorch-transformers 1.2`.
+```bash
+conda create -n ConTest python=3.6
+conda activate ConTest
+pip install -r requirements.txt
+```
 ### Data
 The Penn Treebank and [CoLA](https://nyu-mll.github.io/CoLA/) data are contained in the `data` folder. The folder also contains a few sentences from Gigaword to show the formatting; for the full data please [download it from the LDC](https://catalog.ldc.upenn.edu/LDC2011T07).
 
