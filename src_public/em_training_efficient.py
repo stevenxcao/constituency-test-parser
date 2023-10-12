@@ -155,7 +155,10 @@ def train(train_ptb_path, model_path, resume_path, save_path,
             f1_all = compute_f1_evalb(gold_all, pred_all)
             print()
             print('---------------------------------------------------')
-            print("Epoch-f1 {:.4f}".format(f1_all))
+            if f1_all is None:
+                print("Epoch-f1 None")
+            else:
+                print("Epoch-f1 {:.4f}".format(f1_all))
             print("Saving model to {}...".format(model_path))
             torch.save({
                 'bert_model': 'roberta_base',
